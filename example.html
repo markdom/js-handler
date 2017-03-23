@@ -3,7 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Markdom Javascript Handler example</title>
-	<script type="text/javascript" src="src/vendor/common-util.js"></script>
+	<script type="text/javascript" src="src/common/js.class.js"></script>
+	<script type="text/javascript" src="src/common/binded-class.js"></script>
+	<script type="text/javascript" src="src/common/string-builder.js"></script>
+	<script type="text/javascript" src="src/common/html-tag-builder.js"></script>
 	<script type="text/javascript" src="src/json-dispatcher.js"></script>
 	<script type="text/javascript" src="src/debug-handler.js"></script>
 	<script type="text/javascript" src="src/html-handler.js"></script>
@@ -14,7 +17,7 @@
 	<script type="text/javascript">
 		function fetch(path, callback) {
 			var httpRequest = new XMLHttpRequest();
-			httpRequest.onreadystatechange = function() {
+			httpRequest.onreadystatechange = function () {
 				if (httpRequest.readyState === 4) {
 					if (httpRequest.status === 200) {
 						if (callback) callback(httpRequest.responseText);
@@ -25,15 +28,18 @@
 			httpRequest.send();
 		}
 
-		fetch('example-data.json', function(jsonString){
+		fetch('example-data.json', function (jsonString) {
 			console.log(jsonString);
 			var jsonDispatcher = new JsonDispatcher(jsonString);
 			var debugHandler = new DebugHandler();
-			var htmlHandler = new HtmlHandler();
 			jsonDispatcher.dispatchTo(debugHandler);
 			document.getElementById('debug-output').innerText = debugHandler.getResult();
+			var htmlHandler = new HtmlHandler();
+			htmlHandler
+					.setEscapeHtml(true)
+					.setBreakSoftBreaks(true);
 			jsonDispatcher.dispatchTo(htmlHandler);
-			document.getElementById('debug').innerHTML = debugHandler.getResult();
+			document.getElementById('output').innerHTML = htmlHandler.getResult();
 		});
 
 	</script>

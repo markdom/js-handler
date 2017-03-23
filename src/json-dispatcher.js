@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2017. Martin Brecht-Precht, Markenwerk GmbH
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 var BlockType = {
 	TYPE_CODE: 'CODE',
 	TYPE_COMMENT: 'COMMENT',
@@ -67,23 +89,15 @@ var DispatcherException = function (message) {
 
 var SimpleMarkdomEventDispatcher = BindedJsClass.extend({
 	_markdomHandler: null,
-	_blocksHasChildStack: null,
-	_listHasChildStack: null,
-	_contentsHasChildStack: null,
-	_headingLevelStack: null,
-	_orderedListStartIndexStack: null,
-	_emphasisLevelStack: null,
-	_linkUriStack: null,
-	_linkTitleStack: null,
+	_blocksHasChildStack: [],
+	_listHasChildStack: [],
+	_contentsHasChildStack: [],
+	_headingLevelStack: [],
+	_orderedListStartIndexStack: [],
+	_emphasisLevelStack: [],
+	_linkUriStack: [],
+	_linkTitleStack: [],
 	construct: function (markdomHandler) {
-		this._blocksHasChildStack = new Stack();
-		this._listHasChildStack = new Stack();
-		this._contentsHasChildStack = new Stack();
-		this._headingLevelStack = new Stack();
-		this._orderedListStartIndexStack = new Stack();
-		this._emphasisLevelStack = new Stack();
-		this._linkUriStack = new Stack();
-		this._linkTitleStack = new Stack();
 		this._markdomHandler = markdomHandler;
 	},
 	onDocumentBegin: function () {
@@ -134,12 +148,12 @@ var SimpleMarkdomEventDispatcher = BindedJsClass.extend({
 		this._listHasChildStack.push(false);
 	},
 	onListItemBegin: function () {
-		if (this._listHasChildStack.get() === true) {
+		if (this._listHasChildStack[this._listHasChildStack.length - 1] === true) {
 			this._markdomHandler.onNextListItem();
 		}
 		this._markdomHandler.onListItemBegin();
 		this._onBlocksBegin();
-		this._listHasChildStack.set(true);
+		this._listHasChildStack[this._listHasChildStack.length - 1] = true;
 	},
 	onListItemEnd: function () {
 		this._onBlocksEnd();
@@ -229,11 +243,11 @@ var SimpleMarkdomEventDispatcher = BindedJsClass.extend({
 		this._markdomHandler.onBlocksEnd();
 	},
 	_onBlockBegin: function (type) {
-		if (this._blocksHasChildStack.get() === true) {
+		if (this._blocksHasChildStack[this._blocksHasChildStack.length - 1] === true) {
 			this._markdomHandler.onNextBlock();
 		}
 		this._markdomHandler.onBlockBegin(type);
-		this._blocksHasChildStack.set(true);
+		this._blocksHasChildStack[this._blocksHasChildStack.length - 1] = true;
 	},
 	_onBlockEnd: function (type) {
 		this._markdomHandler.onBlockEnd(type);
@@ -247,11 +261,11 @@ var SimpleMarkdomEventDispatcher = BindedJsClass.extend({
 		this._markdomHandler.onContentsEnd();
 	},
 	_onContentBegin: function (type) {
-		if (this._contentsHasChildStack.get() === true) {
+		if (this._contentsHasChildStack[this._contentsHasChildStack.length - 1] === true) {
 			this._markdomHandler.onNextContent();
 		}
 		this._markdomHandler.onContentBegin(type);
-		this._contentsHasChildStack.set(true);
+		this._contentsHasChildStack[this._contentsHasChildStack.length - 1] = true;
 	},
 	_onContentEnd: function (type) {
 		this._markdomHandler.onContentEnd(type);
@@ -261,25 +275,6 @@ var SimpleMarkdomEventDispatcher = BindedJsClass.extend({
 var JsonDispatcher = BindedJsClass.extend({
 	_document: null,
 	_eventDispatcher: null,
-	_video: null,
-	_controls: null,
-	_startButton: null,
-	_playButton: null,
-	_muteButton: null,
-	_controlTimecodeElapsed: null,
-	_controlTimecodeRemaining: null,
-	_controlBars: null,
-	_controlBarBackground: null,
-	_controlBarBuffer: null,
-	_controlBarProgress: null,
-	_volumeBars: null,
-	_volumeBarBackground: null,
-	_volumeBarVolume: null,
-	_fullscreenButton: null,
-	_fullscreenEnabled: null,
-	_hideControlsTimeout: 3000,
-	_hideControlsTimeoutId: 0,
-	_videoStatus: 'STOPPED',
 	construct: function (jsonString) {
 		this._document = JSON.parse(jsonString);
 	},

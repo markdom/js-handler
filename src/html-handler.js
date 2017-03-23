@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2017. Martin Brecht-Precht, Markenwerk GmbH
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 var HandlerException = function (message) {
 	this.message = message;
 	this.name = "HandlerException";
@@ -6,158 +28,22 @@ var HandlerException = function (message) {
 	};
 };
 
-var HeadingLevel = {
-	LEVEL_1: 1,
-	LEVEL_2: 2,
-	LEVEL_3: 3,
-	LEVEL_4: 4,
-	LEVEL_5: 5,
-	LEVEL_6: 6
-};
-
-var EmphasisLevel = {
-	LEVEL_1: 1,
-	LEVEL_2: 2
-};
-
-var TagBuilder = BindedJsClass.extend({
-	TYPE_CODE_BLOCK: 'CODE_BLOCK',
-	TYPE_CODE_INLINE: 'CODE_INLINE',
-	TYPE_COMMENT: 'COMMENT',
-	TYPE_DIVISION: 'DIVISION',
-	TYPE_HEADING_BEGIN: 'HEADING_BEGIN',
-	TYPE_HEADING_END: 'HEADING_END',
-	TYPE_UNORDERED_LIST_BEGIN: 'UNORDERED_LIST_BEGIN',
-	TYPE_UNORDERED_LIST_END: 'UNORDERED_LIST_END',
-	TYPE_ORDERED_LIST_BEGIN: 'ORDERED_LIST_BEGIN',
-	TYPE_ORDERED_LIST_END: 'ORDERED_LIST_END',
-	TYPE_LIST_ITEM_BEGIN: 'LIST_ITEM_BEGIN',
-	TYPE_LIST_ITEM_END: 'LIST_ITEM_END',
-	TYPE_PARAGRAPH_BEGIN: 'PARAGRAPH_BEGIN',
-	TYPE_PARAGRAPH_END: 'PARAGRAPH_END',
-	TYPE_QUOTE_BEGIN: 'QUOTE_BEGIN',
-	TYPE_QUOTE_END: 'QUOTE_END',
-	TYPE_EMPHASIS_LEVEL_1_BEGIN: 'EMPHASIS_LEVEL_1_BEGIN',
-	TYPE_EMPHASIS_LEVEL_1_END: 'EMPHASIS_LEVEL_1_END',
-	TYPE_EMPHASIS_LEVEL_2_BEGIN: 'EMPHASIS_LEVEL_2_BEGIN',
-	TYPE_EMPHASIS_LEVEL_2_END: 'EMPHASIS_LEVEL_2_END',
-	TYPE_IMAGE: 'IMAGE',
-	TYPE_LINE_BREAK: 'LINE_BREAK',
-	TYPE_LINK_BEGIN: 'LINK_BEGIN',
-	TYPE_LINK_END: 'LINK_END',
-	buildTag: function (type, value, attributes, variant) {
-		switch (type) {
-			case this.TYPE_CODE_BLOCK:
-				return '<pre><code' + this._getAttributeString(attributes) + '>' + value + '</code></pre>';
-			case this.TYPE_CODE_INLINE:
-				return '<code' + this._getAttributeString(attributes) + '>' + value + '</code>';
-			case this.TYPE_COMMENT:
-				return '<!-- ' + value + ' -->';
-			case this.TYPE_DIVISION:
-				return '<hr' + this._getAttributeString(attributes) + '>';
-			case this.TYPE_HEADING_BEGIN:
-				switch (variant) {
-					case HeadingLevel.LEVEL_2:
-						return '<h2' + this._getAttributeString(attributes) + '>';
-					case HeadingLevel.LEVEL_3:
-						return '<h3' + this._getAttributeString(attributes) + '>';
-					case HeadingLevel.LEVEL_4:
-						return '<h4' + this._getAttributeString(attributes) + '>';
-					case HeadingLevel.LEVEL_5:
-						return '<h5' + this._getAttributeString(attributes) + '>';
-					case HeadingLevel.LEVEL_6:
-						return '<h6' + this._getAttributeString(attributes) + '>';
-					case HeadingLevel.LEVEL_1:
-					default:
-						return '<h1' + this._getAttributeString(attributes) + '>';
-				}
-			case this.TYPE_HEADING_END:
-				switch (variant) {
-					case HeadingLevel.LEVEL_2:
-						return '</h2>';
-					case HeadingLevel.LEVEL_3:
-						return '</h3>';
-					case HeadingLevel.LEVEL_4:
-						return '</h4>';
-					case HeadingLevel.LEVEL_5:
-						return '</h5>';
-					case HeadingLevel.LEVEL_6:
-						return '</h6>';
-					case HeadingLevel.LEVEL_1:
-					default:
-						return '</h1>';
-				}
-			case this.TYPE_UNORDERED_LIST_BEGIN:
-				return '<ul' + this._getAttributeString(attributes) + '>';
-			case this.TYPE_UNORDERED_LIST_END:
-				return '</ul>';
-			case this.TYPE_ORDERED_LIST_BEGIN:
-				return '<ol' + this._getAttributeString(attributes) + '>';
-			case this.TYPE_ORDERED_LIST_END:
-				return '</ol>';
-			case this.TYPE_LIST_ITEM_BEGIN:
-				return '<li' + this._getAttributeString(attributes) + '>';
-			case this.TYPE_LIST_ITEM_END:
-				return '</li>';
-			case this.TYPE_PARAGRAPH_BEGIN:
-				return '<p' + this._getAttributeString(attributes) + '>';
-			case this.TYPE_PARAGRAPH_END:
-				return '</p>';
-			case this.TYPE_QUOTE_BEGIN:
-				return '<blockquote' + this._getAttributeString(attributes) + '>';
-			case this.TYPE_QUOTE_END:
-				return '</blockquote>';
-			case this.TYPE_EMPHASIS_LEVEL_1_BEGIN:
-				return '<em' + this._getAttributeString(attributes) + '>';
-			case this.TYPE_EMPHASIS_LEVEL_1_END:
-				return '</em>';
-			case this.TYPE_EMPHASIS_LEVEL_2_BEGIN:
-				return '<strong' + this._getAttributeString(attributes) + '>';
-			case this.TYPE_EMPHASIS_LEVEL_2_END:
-				return '</strong>';
-			case this.TYPE_IMAGE:
-				return '<img' + this._getAttributeString(attributes) + '>';
-			case this.TYPE_LINE_BREAK:
-				return '<br>';
-			case this.TYPE_LINK_BEGIN:
-				return '<a' + this._getAttributeString(attributes) + '>';
-			case this.TYPE_LINK_END:
-				return '</a>';
-		}
-		throw new HandlerException('Invalid tagname type ' + type);
-	},
-	_getAttributeString: function (attributes) {
-		var attributeParts = [];
-		for (var key in attributes) {
-			var value = attributes.key;
-			if (value === null) {
-				continue;
-			}
-			value = value.replace(/^\s+|\s+$/g, '');
-			if (value.length === 0) {
-				continue;
-			}
-			attributeParts.push(key.toString().toLowerCase() + '="' + value + '"');
-		}
-		if (attributeParts.length === 0) {
-			return '';
-		}
-		return ' ' + attributeParts.join(' ');
-	}
-});
-
+//noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
 var HtmlHandler = BindedJsClass.extend({
-	LINE_BREAK: "\n",
 	_handleComments: true,
 	_tagBuilder: null,
 	_escapeHtml: false,
 	_breakSoftBreaks: false,
 	_htmlBuilder: null,
-	_blockStack: null,
+	_blockStack: [],
+	statics: {
+		LINE_BREAK: "\n",
+		EMPHASIS_LEVEL_1: 1,
+		EMPHASIS_LEVEL_2: 2
+	},
 	construct: function () {
-		this._tagBuilder = new TagBuilder();
+		this._tagBuilder = new HtmlTagBuilder();
 		this._htmlBuilder = new StringBuilder();
-		this._blockStack = new Stack();
 	},
 	getHandleComments: function () {
 		return this._handleComments;
@@ -201,14 +87,14 @@ var HtmlHandler = BindedJsClass.extend({
 	},
 	onBlockBegin: function (type) {
 		if (this._htmlBuilder.size() > 0) {
-			this._htmlBuilder.append(this.LINE_BREAK);
+			this._htmlBuilder.append(HtmlHandler.LINE_BREAK);
 		}
 		this._blockStack.push(type);
 	},
 	onCodeBlock: function (code, hint) {
 		this._htmlBuilder.append(
 			this.getTagBuilder().buildTag(
-				TagBuilder.TYPE_CODE_BLOCK,
+				HtmlTagBuilder.TYPE_CODE_BLOCK,
 				code,
 				{class: hint}
 			)
@@ -220,18 +106,18 @@ var HtmlHandler = BindedJsClass.extend({
 		}
 		this._htmlBuilder.append(
 			this.getTagBuilder().buildTag(
-				TagBuilder.TYPE_COMMENT,
+				HtmlTagBuilder.TYPE_COMMENT,
 				comment
 			)
 		);
 	},
 	onDivisionBlock: function () {
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_DIVISION), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_DIVISION));
 	},
 	onHeadingBlockBegin: function (level) {
 		this._htmlBuilder.append(
 			this.getTagBuilder().buildTag(
-				TagBuilder.TYPE_HEADING_BEGIN,
+				HtmlTagBuilder.TYPE_HEADING_BEGIN,
 				null,
 				{},
 				level
@@ -241,7 +127,7 @@ var HtmlHandler = BindedJsClass.extend({
 	onHeadingBlockEnd: function (level) {
 		this._htmlBuilder.append(
 			this.getTagBuilder().buildTag(
-				TagBuilder.TYPE_HEADING_END,
+				HtmlTagBuilder.TYPE_HEADING_END,
 				null,
 				{},
 				level
@@ -249,12 +135,12 @@ var HtmlHandler = BindedJsClass.extend({
 		);
 	},
 	onUnorderedListBlockBegin: function () {
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_UNORDERED_LIST_BEGIN), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_UNORDERED_LIST_BEGIN));
 	},
 	onOrderedListBlockBegin: function (startIndex) {
 		this._htmlBuilder.append(
 			this.getTagBuilder().buildTag(
-				TagBuilder.TYPE_ORDERED_LIST_BEGIN,
+				HtmlTagBuilder.TYPE_ORDERED_LIST_BEGIN,
 				null,
 				{start: startIndex.toString()}
 			)
@@ -264,46 +150,46 @@ var HtmlHandler = BindedJsClass.extend({
 	},
 	onListItemBegin: function () {
 		this._htmlBuilder
-			.append(this.LINE_BREAK)
-			.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_LIST_ITEM_BEGIN), null);
+			.append(HtmlHandler.LINE_BREAK)
+			.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_LIST_ITEM_BEGIN));
 		this._blockStack.push('listitem');
 	},
 	onListItemEnd: function () {
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_LIST_ITEM_END), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_LIST_ITEM_END));
 		this._blockStack.pop();
 	},
 	onNextListItem: function () {
 	},
 	onListItemsEnd: function () {
-		if (this._blockStack.size() > 0) {
-			this._htmlBuilder.append(this.LINE_BREAK, null);
+		if (this._blockStack.length > 0) {
+			this._htmlBuilder.append(HtmlHandler.LINE_BREAK, null);
 		}
 	},
 	onUnorderedListBlockEnd: function () {
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_UNORDERED_LIST_END), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_UNORDERED_LIST_END));
 	},
 	onOrderedListBlockEnd: function (startIndex) {
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_ORDERED_LIST_END), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_ORDERED_LIST_END));
 	},
 	onParagraphBlockBegin: function () {
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_PARAGRAPH_BEGIN), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_PARAGRAPH_BEGIN));
 	},
 	onParagraphBlockEnd: function () {
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_PARAGRAPH_END), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_PARAGRAPH_END));
 	},
 	onQuoteBlockBegin: function () {
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_QUOTE_BEGIN), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_QUOTE_BEGIN));
 	},
 	onQuoteBlockEnd: function () {
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_QUOTE_END), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_QUOTE_END));
 	},
 	onBlockEnd: function (type) {
 	},
 	onNextBlock: function () {
 	},
 	onBlocksEnd: function () {
-		if (this._blockStack.size() > 0) {
-			this._htmlBuilder.append(this.LINE_BREAK);
+		if (this._blockStack.length > 0) {
+			this._htmlBuilder.append(HtmlHandler.LINE_BREAK);
 		}
 	},
 	onContentsBegin: function () {
@@ -311,26 +197,26 @@ var HtmlHandler = BindedJsClass.extend({
 	onContentBegin: function (type) {
 	},
 	onCodeContent: function (code) {
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_CODE_INLINE, code), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_CODE_INLINE, code));
 	},
 	onEmphasisContentBegin: function (level) {
-		var tagType = TagBuilder.TYPE_EMPHASIS_LEVEL_1_BEGIN;
-		if (level == EmphasisLevel.LEVEL_2) {
-			tagType = TagBuilder.TYPE_EMPHASIS_LEVEL_2_BEGIN;
+		var tagType = HtmlTagBuilder.TYPE_EMPHASIS_LEVEL_1_BEGIN;
+		if (level === HtmlHandler.EMPHASIS_LEVEL_2) {
+			tagType = HtmlTagBuilder.TYPE_EMPHASIS_LEVEL_2_BEGIN;
 		}
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(tagType), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(tagType));
 	},
 	onEmphasisContentEnd: function (level) {
-		var tagType = TagBuilder.TYPE_EMPHASIS_LEVEL_1_END;
-		if (level == EmphasisLevel.LEVEL_2) {
-			tagType = TagBuilder.TYPE_EMPHASIS_LEVEL_2_END;
+		var tagType = HtmlTagBuilder.TYPE_EMPHASIS_LEVEL_1_END;
+		if (level === HtmlHandler.EMPHASIS_LEVEL_2) {
+			tagType = HtmlTagBuilder.TYPE_EMPHASIS_LEVEL_2_END;
 		}
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(tagType), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(tagType));
 	},
 	onImageContent: function (uri, title, alternative) {
 		this._htmlBuilder.append(
 			this.getTagBuilder().buildTag(
-				TagBuilder.TYPE_IMAGE,
+				HtmlTagBuilder.TYPE_IMAGE,
 				null,
 				{
 					src: uri,
@@ -342,15 +228,15 @@ var HtmlHandler = BindedJsClass.extend({
 	},
 	onLineBreakContent: function (hard) {
 		if (hard || this.getBreakSoftBreaks()) {
-			this._htmlBuilder.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_LINE_BREAK), null);
+			this._htmlBuilder.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_LINE_BREAK));
 		} else {
-			this._htmlBuilder.append(this.LINE_BREAK, null);
+			this._htmlBuilder.append(HtmlHandler.LINE_BREAK, null);
 		}
 	},
 	onLinkContentBegin: function (uri, title) {
 		this._htmlBuilder.append(
 			this.getTagBuilder().buildTag(
-				TagBuilder.TYPE_LINK_BEGIN,
+				HtmlTagBuilder.TYPE_LINK_BEGIN,
 				null,
 				{
 					href: uri,
@@ -360,7 +246,7 @@ var HtmlHandler = BindedJsClass.extend({
 		);
 	},
 	onLinkContentEnd: function (uri, title) {
-		this._htmlBuilder.append(this.getTagBuilder().buildTag(TagBuilder.TYPE_LINK_END), null);
+		this._htmlBuilder.append(this.getTagBuilder().buildTag(HtmlTagBuilder.TYPE_LINK_END));
 	},
 	onTextContent: function (text) {
 		if (this.getEscapeHtml()) {

@@ -1,0 +1,33 @@
+{
+  "name": "markdom-handler",
+  "homepage": "https://github.com/markdom/js-handler",
+  "authors": [
+    "Martin Brecht-Precht <mb@markenwerk.net>"
+  ],
+  "description": "Markdom handler and dispatcher implementations written in Javascript.",
+  "main": [
+    "src/json-dispatcher.js",
+    "src/debug-handler.js",
+    "src/html-handler.js",
+    "src/html-tag-builder.js",
+    "src/common/js.class.js",
+    "src/common/binded-class.js",
+    "src/common/string-builder.js"
+  ],
+  "keywords": [
+    "Markdom",
+    "handler",
+    "dispatcher",
+    "JSON",
+    "HTML",
+    "XHTML"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
