@@ -6,13 +6,7 @@
   ],
   "description": "Markdom handler and dispatcher implementations written in Javascript.",
   "main": [
-    "src/json-dispatcher.js",
-    "src/debug-handler.js",
-    "src/html-handler.js",
-    "src/html-tag-builder.js",
-    "src/common/js.class.js",
-    "src/common/binded-class.js",
-    "src/common/string-builder.js"
+    "src/html-handler.js"
   ],
   "keywords": [
     "Markdom",
