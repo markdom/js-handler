@@ -20,16 +20,19 @@
  * THE SOFTWARE.
  */
 
-var StringBuilder = BindedJsClass.extend({
-	_string: '',
-	append: function (string) {
-		this._string += string.toString();
-		return this;
-	},
-	size: function () {
-		return this._string.length;
-	},
-	build: function () {
-		return this._string;
-	}
-});
+var StringBuilder = function () {
+	this._string = '';
+};
+
+StringBuilder.prototype.append = function (string) {
+	this._string += string.toString();
+	return this;
+};
+
+StringBuilder.prototype.size = function () {
+	return this._string.length;
+};
+
+StringBuilder.prototype.build = function () {
+	return this._string;
+};

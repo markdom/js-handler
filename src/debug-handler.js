@@ -20,145 +20,185 @@
  * THE SOFTWARE.
  */
 
-//noinspection JSUnusedGlobalSymbols
-var DebugHandler = BindedJsClass.extend({
-	_handleComments: true,
-	_indentationLevel: 0,
-	_output: [],
-	onDocumentBegin: function () {
-		this._output.push(this.getIndentation() + 'onDocumentBegin');
-		this._indentationLevel++;
-	},
-	onDocumentEnd: function () {
-		this._indentationLevel--;
-		this._output.push(this.getIndentation() + 'onDocumentEnd');
-	},
-	onBlocksBegin: function () {
-		this._output.push(this.getIndentation() + 'onBlocksBegin');
-		this._indentationLevel++;
-	},
-	onBlockBegin: function (type) {
-		this._output.push(this.getIndentation() + 'onBlockBegin: ' + type);
-		this._indentationLevel++;
-	},
-	onCodeBlock: function (code, hint) {
-		this._output.push(this.getIndentation() + 'onCodeBlock: ' + hint + ' ~ ' + code);
-	},
-	onCommentBlock: function (comment) {
-		this._output.push(this.getIndentation() + 'onCommentBlock: ' + comment);
-	},
-	onDivisionBlock: function () {
-		this._output.push(this.getIndentation() + 'onDivisionBlock');
-	},
-	onHeadingBlockBegin: function (level) {
-		this._output.push(this.getIndentation() + 'onHeadingBlockBegin: ' + level);
-	},
-	onHeadingBlockEnd: function (level) {
-		this._output.push(this.getIndentation() + 'onHeadingBlockEnd: ' + level);
-	},
-	onUnorderedListBlockBegin: function () {
-		this._output.push(this.getIndentation() + 'onUnorderedListBlockBegin');
-	},
-	onOrderedListBlockBegin: function (startIndex) {
-		this._output.push(this.getIndentation() + 'onOrderedListBlockBegin: ' + startIndex);
-	},
-	onListItemsBegin: function () {
-		this._output.push(this.getIndentation() + 'onListItemsBegin');
-	},
-	onListItemBegin: function () {
-		this._output.push(this.getIndentation() + 'onListItemBegin');
-	},
-	onListItemEnd: function () {
-		this._output.push(this.getIndentation() + 'onListItemEnd');
-	},
-	onNextListItem: function () {
-		this._output.push(this.getIndentation() + 'onNextListItem');
-	},
-	onListItemsEnd: function () {
-		this._output.push(this.getIndentation() + 'onListItemsEnd');
-	},
-	onUnorderedListBlockEnd: function () {
-		this._output.push(this.getIndentation() + 'onUnorderedListBlockEnd');
-	},
-	onOrderedListBlockEnd: function (startIndex) {
-		this._output.push(this.getIndentation() + 'onOrderedListBlockEnd: ' + startIndex);
-	},
-	onParagraphBlockBegin: function () {
-		this._output.push(this.getIndentation() + 'onParagraphBlockBegin');
-	},
-	onParagraphBlockEnd: function () {
-		this._output.push(this.getIndentation() + 'onParagraphBlockEnd');
-	},
-	onQuoteBlockBegin: function () {
-		this._output.push(this.getIndentation() + 'onQuoteBlockBegin');
-	},
-	onQuoteBlockEnd: function () {
-		this._output.push(this.getIndentation() + 'onQuoteBlockEnd');
-	},
-	onBlockEnd: function (type) {
-		this._indentationLevel--;
-		this._output.push(this.getIndentation() + 'onBlockEnd: ' + type);
-	},
-	onNextBlock: function () {
-		this._output.push(this.getIndentation() + 'onNextBlock');
-	},
-	onBlocksEnd: function () {
-		this._indentationLevel--;
-		this._output.push(this.getIndentation() + 'onBlocksEnd');
-	},
-	onContentsBegin: function () {
-		this._output.push(this.getIndentation() + 'onContentsBegin');
-		this._indentationLevel++;
-	},
-	onContentBegin: function (type) {
-		this._output.push(this.getIndentation() + 'onContentBegin: ' + type);
-		this._indentationLevel++;
-	},
-	onCodeContent: function (code) {
-		this._output.push(this.getIndentation() + 'onCodeContent: ' + code);
-	},
-	onEmphasisContentBegin: function (level) {
-		this._output.push(this.getIndentation() + 'onEmphasisContentBegin: ' + level);
-	},
-	onEmphasisContentEnd: function (level) {
-		this._output.push(this.getIndentation() + 'onEmphasisContentEnd: ' + level);
-	},
-	onImageContent: function (uri, title, alternative) {
-		this._output.push(this.getIndentation() + 'onImageContent: ' + uri + ' ~ ' + title + ' ~ ' + alternative);
-	},
-	onLineBreakContent: function (hard) {
-		this._output.push(this.getIndentation() + 'onLineBreakContent: ' + hard);
-	},
-	onLinkContentBegin: function (uri, title) {
-		this._output.push(this.getIndentation() + 'onLinkContentBegin: ' + uri + ' ~ ' + title);
-	},
-	onLinkContentEnd: function (uri, title) {
-		this._output.push(this.getIndentation() + 'onLinkContentEnd: ' + uri + ' ~ ' + title);
-	},
-	onTextContent: function (text) {
-		this._output.push(this.getIndentation() + 'onTextContent: ' + text);
-	},
-	onContentEnd: function (type) {
-		this._indentationLevel--;
-		this._output.push(this.getIndentation() + 'onContentEnd: ' + type);
-	},
-	onNextContent: function () {
-		this._output.push(this.getIndentation() + 'onNextContent');
-	},
-	onContentsEnd: function () {
-		this._indentationLevel--;
-		this._output.push(this.getIndentation() + 'onContentsEnd');
-	},
-	getResult: function () {
-		return this._output.join("\n");
-	},
-	getIndentation: function () {
-		return this._padLeft('', ' ', this._indentationLevel * 4);
-	},
-	_padLeft: function (string, char, size) {
-		while (string.length < size) {
-			string = char + string;
-		}
-		return string;
+var DebugHandler = function () {
+	this._handleComments = true;
+	this._indentationLevel = 0;
+	this._output = [];
+};
+
+DebugHandler.prototype.onDocumentBegin = function () {
+	this._output.push(this.getIndentation() + 'onDocumentBegin');
+	this._indentationLevel++;
+};
+
+DebugHandler.prototype.onDocumentEnd = function () {
+	this._indentationLevel--;
+	this._output.push(this.getIndentation() + 'onDocumentEnd');
+};
+
+DebugHandler.prototype.onBlocksBegin = function () {
+	this._output.push(this.getIndentation() + 'onBlocksBegin');
+	this._indentationLevel++;
+};
+
+DebugHandler.prototype.onBlockBegin = function (type) {
+	this._output.push(this.getIndentation() + 'onBlockBegin: ' + type);
+	this._indentationLevel++;
+};
+
+DebugHandler.prototype.onCodeBlock = function (code, hint) {
+	this._output.push(this.getIndentation() + 'onCodeBlock: ' + hint + ' ~ ' + code);
+};
+
+DebugHandler.prototype.onCommentBlock = function (comment) {
+	this._output.push(this.getIndentation() + 'onCommentBlock: ' + comment);
+};
+
+DebugHandler.prototype.onDivisionBlock = function () {
+	this._output.push(this.getIndentation() + 'onDivisionBlock');
+};
+
+DebugHandler.prototype.onHeadingBlockBegin = function (level) {
+	this._output.push(this.getIndentation() + 'onHeadingBlockBegin: ' + level);
+};
+
+DebugHandler.prototype.onHeadingBlockEnd = function (level) {
+	this._output.push(this.getIndentation() + 'onHeadingBlockEnd: ' + level);
+};
+
+DebugHandler.prototype.onUnorderedListBlockBegin = function () {
+	this._output.push(this.getIndentation() + 'onUnorderedListBlockBegin');
+};
+
+DebugHandler.prototype.onOrderedListBlockBegin = function (startIndex) {
+	this._output.push(this.getIndentation() + 'onOrderedListBlockBegin: ' + startIndex);
+};
+
+DebugHandler.prototype.onListItemsBegin = function () {
+	this._output.push(this.getIndentation() + 'onListItemsBegin');
+};
+
+DebugHandler.prototype.onListItemBegin = function () {
+	this._output.push(this.getIndentation() + 'onListItemBegin');
+};
+
+DebugHandler.prototype.onListItemEnd = function () {
+	this._output.push(this.getIndentation() + 'onListItemEnd');
+};
+
+DebugHandler.prototype.onNextListItem = function () {
+	this._output.push(this.getIndentation() + 'onNextListItem');
+};
+
+DebugHandler.prototype.onListItemsEnd = function () {
+	this._output.push(this.getIndentation() + 'onListItemsEnd');
+};
+
+DebugHandler.prototype.onUnorderedListBlockEnd = function () {
+	this._output.push(this.getIndentation() + 'onUnorderedListBlockEnd');
+};
+
+DebugHandler.prototype.onOrderedListBlockEnd = function (startIndex) {
+	this._output.push(this.getIndentation() + 'onOrderedListBlockEnd: ' + startIndex);
+};
+
+DebugHandler.prototype.onParagraphBlockBegin = function () {
+	this._output.push(this.getIndentation() + 'onParagraphBlockBegin');
+};
+
+DebugHandler.prototype.onParagraphBlockEnd = function () {
+	this._output.push(this.getIndentation() + 'onParagraphBlockEnd');
+};
+
+DebugHandler.prototype.onQuoteBlockBegin = function () {
+	this._output.push(this.getIndentation() + 'onQuoteBlockBegin');
+};
+
+DebugHandler.prototype.onQuoteBlockEnd = function () {
+	this._output.push(this.getIndentation() + 'onQuoteBlockEnd');
+};
+
+DebugHandler.prototype.onBlockEnd = function (type) {
+	this._indentationLevel--;
+	this._output.push(this.getIndentation() + 'onBlockEnd: ' + type);
+};
+
+DebugHandler.prototype.onNextBlock = function () {
+	this._output.push(this.getIndentation() + 'onNextBlock');
+};
+
+DebugHandler.prototype.onBlocksEnd = function () {
+	this._indentationLevel--;
+	this._output.push(this.getIndentation() + 'onBlocksEnd');
+};
+
+DebugHandler.prototype.onContentsBegin = function () {
+	this._output.push(this.getIndentation() + 'onContentsBegin');
+	this._indentationLevel++;
+};
+
+DebugHandler.prototype.onContentBegin = function (type) {
+	this._output.push(this.getIndentation() + 'onContentBegin: ' + type);
+	this._indentationLevel++;
+};
+
+DebugHandler.prototype.onCodeContent = function (code) {
+	this._output.push(this.getIndentation() + 'onCodeContent: ' + code);
+};
+
+DebugHandler.prototype.onEmphasisContentBegin = function (level) {
+	this._output.push(this.getIndentation() + 'onEmphasisContentBegin: ' + level);
+};
+
+DebugHandler.prototype.onEmphasisContentEnd = function (level) {
+	this._output.push(this.getIndentation() + 'onEmphasisContentEnd: ' + level);
+};
+
+DebugHandler.prototype.onImageContent = function (uri, title, alternative) {
+	this._output.push(this.getIndentation() + 'onImageContent: ' + uri + ' ~ ' + title + ' ~ ' + alternative);
+};
+
+DebugHandler.prototype.onLineBreakContent = function (hard) {
+	this._output.push(this.getIndentation() + 'onLineBreakContent: ' + hard);
+};
+
+DebugHandler.prototype.onLinkContentBegin = function (uri, title) {
+	this._output.push(this.getIndentation() + 'onLinkContentBegin: ' + uri + ' ~ ' + title);
+};
+
+DebugHandler.prototype.onLinkContentEnd = function (uri, title) {
+	this._output.push(this.getIndentation() + 'onLinkContentEnd: ' + uri + ' ~ ' + title);
+};
+
+DebugHandler.prototype.onTextContent = function (text) {
+	this._output.push(this.getIndentation() + 'onTextContent: ' + text);
+};
+
+DebugHandler.prototype.onContentEnd = function (type) {
+	this._indentationLevel--;
+	this._output.push(this.getIndentation() + 'onContentEnd: ' + type);
+};
+
+DebugHandler.prototype.onNextContent = function () {
+	this._output.push(this.getIndentation() + 'onNextContent');
+};
+
+DebugHandler.prototype.onContentsEnd = function () {
+	this._indentationLevel--;
+	this._output.push(this.getIndentation() + 'onContentsEnd');
+};
+
+DebugHandler.prototype.getResult = function () {
+	return this._output.join("\n");
+};
+
+DebugHandler.prototype.getIndentation = function () {
+	return this._padLeft('', ' ', this._indentationLevel * 4);
+};
+
+DebugHandler.prototype._padLeft = function (string, char, size) {
+	while (string.length < size) {
+		string = char + string;
 	}
-});
+	return string;
+};

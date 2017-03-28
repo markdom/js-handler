@@ -3,9 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Markdom Javascript Handler example</title>
-	<script type="text/javascript" src="src/common/js.class.js"></script>
-	<script type="text/javascript" src="src/common/binded-class.js"></script>
 	<script type="text/javascript" src="src/common/string-builder.js"></script>
+	<script type="text/javascript" src="src/common/simple-markdom-event-dispatcher.js"></script>
 	<script type="text/javascript" src="src/common/html-tag-builder.js"></script>
 	<script type="text/javascript" src="src/json-dispatcher.js"></script>
 	<script type="text/javascript" src="src/debug-handler.js"></script>
@@ -29,7 +28,6 @@
 		}
 
 		fetch('example-data.json', function (jsonString) {
-			console.log(jsonString);
 			var jsonDispatcher = new JsonDispatcher(jsonString);
 			var debugHandler = new DebugHandler();
 			jsonDispatcher.dispatchTo(debugHandler);
